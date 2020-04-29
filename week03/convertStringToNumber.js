@@ -1,34 +1,30 @@
-function convertStringToNumber(string, radix = 10) {
-    if (radix > 10) {
-      return;
-    }
-    let flag = /e|E/.test(string);
-    if (!flag) {
-      let chars = string.split('');
-      let number = 0;
-      let i = 0;
-      while (i < chars.length && chars[i] != '.') {
-        number = number * radix;
-        number += chars[i].codePointAt(0) - '0'.codePointAt(0);
-        i++;
+function convertStringToNumber(string, x){
+  if(string.indexOf("e") < 0){
+      if(arguments.length < 2){
+          x = 10;
       }
-      if (chars[i] === '.') {
-        i++;
+      var chars = string.split('');
+      var number = 0;
+      var i = 0;
+      while(i < chars.length && chars[i] !== '.'){
+          number = number * x;
+          number += chars[i].codePointAt(0) - '0'.codePointAt(0); //单个字符转成数字
+          i++;
       }
-      let fraction = 1;
-      while (i < chars.length) {
-        fraction /= radix;
-        number += (chars[i].codePointAt(0) - '0'.codePointAt(0)) * fraction;
-        i++;
+      if(chars[i] === '.'){
+          i++;
       }
-      return number;
-    } else {
-      let logNumber = Number(string.match(/\d+$/)[0]);
-      let number = string.match(/^[\d\.]+/)[0].replace(/\./, '');
-      if (/e-|E-/.test(string)) {
-        return Number(number.padEnd(logNumber + 1, 0));
-      } else {
-        return Number(number.padStart(logNumber + number.length, 0).replace(/^0/, '0.'));
+      var fraction = 1;
+      while(i < chars.length){
+          fraction = fraction / x;
+          number += (chars[i].codePointAt(0) - '0'.codePointAt(0)) * fraction; 
+          i++;
       }
-    }
+  }else{
+      var eChars = string.split('e');
+          var left = Number(eChars[0]);
+          var right = Number(eChars[1]);
+          number = left * Math.pow(10, right);
   }
+  return number;
+}
